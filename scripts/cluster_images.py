@@ -83,5 +83,5 @@ if __name__ == '__main__':
         for target_filename, source_filename in symlinks.items():
             print('{}\t{}'.format(
                 basename(source_filename),
-                basename(target_filename)
+                basename(target_filename),
             ), file=f)
