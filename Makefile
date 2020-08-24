@@ -10,7 +10,7 @@ frames-%-naive: %.mp4
 	$(FFMPEG) -i $< -f image2 $@/%06d.png
 	find $@/ -name '*.png' | sort -t / -k 2 -n > $@/frames.txt
 
-frames-%-2x-naive: frames-%
+frames-%-2x-naive: frames-%-naive
 	mkdir -p $(LARGE_STORAGE)/$@
 	ln -s $(LARGE_STORAGE)/$@ $@
 	$(WAIFU2X) -l $</frames.txt $(WAIFU2X_OPTIONS) -o $@/%06d.png
