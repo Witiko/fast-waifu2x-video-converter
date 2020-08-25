@@ -14,12 +14,12 @@ frames-%-2x-naive: frames-%-naive
 	mkdir -p $(LARGE_STORAGE)/$@
 	ln -s $(LARGE_STORAGE)/$@ $@
 	$(WAIFU2X) -l $</frames.txt $(WAIFU2X_OPTIONS) -o $@/%06d.png
-	rm -r $</
+	rm -r $(LARGE_STORAGE)/$<
 	rm $<
 
 %2x-naive.mp4: frames-%-2x-naive %.mp4
 	$(FFMPEG) -framerate $$($(call get_framerate,$(word 2,$^))) -i $</%06d.png -i $(word 2,$^) -map 0:v -map 1:a $(FFMPEG_OPTIONS) $@
-	rm -r $</
+	rm -r $(LARGE_STORAGE)/$<
 	rm $<
 
 frames-%: %.mp4
@@ -37,10 +37,10 @@ frames-%-2x: frames-%
 	(set -e; cd $@ && while read SOURCE DEST; do mv    $$SOURCE $$DEST; printf .; done) < $</frames-renames.txt  | pv -s `wc -l < $</frames-renames.txt ` > /dev/null
 	echo Symlinking cluster members to representatives
 	(set -e; cd $@ && while read SOURCE DEST; do ln -s $$SOURCE $$DEST; printf .; done) < $</frames-symlinks.txt | pv -s `wc -l < $</frames-symlinks.txt` > /dev/null
-	rm -r $</
+	rm -r $(LARGE_STORAGE)/$<
 	rm $<
 
 %2x.mp4: frames-%-2x %.mp4
 	$(FFMPEG) -framerate $$($(call get_framerate,$(word 2,$^))) -i $</%06d.png -i $(word 2,$^) -map 0:v -map 1:a $(FFMPEG_OPTIONS) $@
-	rm -r $</
+	rm -r $(LARGE_STORAGE)/$<
 	rm $<
